@@ -43,6 +43,7 @@ pub fn path_to_icon_name(string: &OsStr) -> Option<String> {
 pub fn bundle_icons<P, I, S>(
     out_file_name: &str,
     app_id: Option<&str>,
+    identifier: Option<&str>,
     base_resource_path: Option<&str>,
     icons_folder: Option<P>,
     icon_names: I,
@@ -54,6 +55,7 @@ pub fn bundle_icons<P, I, S>(
     let out_dir = env::var("OUT_DIR").unwrap();
     let out_dir = Path::new(&out_dir);
     let mut icons: HashMap<String, PathBuf> = HashMap::new();
+    let identifier_str = identifier.unwrap_or("");
 
     if let Some(folder) = &icons_folder {
         println!("cargo:rerun-if-changed={}", folder.as_ref().display());
@@ -111,7 +113,7 @@ pub fn bundle_icons<P, I, S>(
             .iter()
             .map(|(icon, path)| {
                 GResourceFileData::from_file(
-                    format!("{prefix}/scalable/actions/{icon}-symbolic.svg"),
+                    format!("{prefix}/scalable/actions/{identifier_str}{icon}-symbolic.svg"),
                     path,
                     true,
                     &PreprocessOptions::xml_stripblanks(),
@@ -137,7 +139,7 @@ pub fn bundle_icons<P, I, S>(
             write!(
                 out_file,
                 "/// Icon name of the icon `{icon}`, found at `{path}`\n\
-                pub const {const_name}: &str = \"{icon}\";\n"
+                pub const {const_name}: &str = \"{identifier_str}{icon}\";\n"
             )
             .unwrap();
         }

@@ -20,6 +20,8 @@ fn main() {
         "icon_names.rs",
         // Optional app ID
         Some("com.example.myapp"),
+        // Optional unique identifier (to prevent theming)
+        None::<&str>,
         // Custom base resource path:
         // * defaults to `/com/example/myapp` in this case if not specified explicitly
         // * or `/org/relm4` if app ID was not specified either
